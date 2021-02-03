@@ -2,6 +2,18 @@ from abc import ABC, abstractmethod
 import torch
 
 
+class WeightedResiduals:
+    def __init__(self, eq_system, weight_fns):
+        self.eq_system = eq_system
+        self.weight_fns = weight_fns
+
+    def __call__(self, *args, **kwargs):
+        return [
+            eq * w(*args, **kwargs)
+            for eq, w in zip(self.eq_system(*args, **kwargs), self.weight_fns)
+        ]
+
+
 class WeightFunction(ABC):
     @abstractmethod
     def __call__(self, *args, **kwargs):
