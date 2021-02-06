@@ -4,6 +4,14 @@ import collections.abc
 import yaml
 
 
+def auto_convert_to_config(data, name='config'):
+    if isinstance(data, Config):
+        return data
+    if isinstance(data, collections.abc.Mapping):
+        return Config(data, name=name)
+    return data
+
+
 class Config:
     def __init__(self, config_dict, name='config'):
         self._name = name
@@ -30,10 +38,7 @@ class Config:
             # Don't mess with it unless you know what you are doing
             return functools.partial(getattr(Config, item), self)
         except AttributeError:
-            v = self.__dict__.get(item, None)
-            if isinstance(v, collections.abc.Mapping):
-                return Config(v, name=item)
-            return v
+            return auto_convert_to_config(self.__dict__.get(item, None), name=item)
 
     def __repr__(self):
         return f'Config({self._name}){[k for k in self.__dict__]}'
@@ -42,3 +47,8 @@ class Config:
         for k in self.__dict__:
             if k != '_name':
                 yield k
+
+    def items(self):
+        for k in self.__dict__:
+            if k != '_name':
+                yield k, auto_convert_to_config(self.__dict__[k])

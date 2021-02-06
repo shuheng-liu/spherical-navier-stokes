@@ -14,6 +14,12 @@ def test_config():
     assert config.a.b == 2
     assert config.b == 3
     assert set(config) == {'a', 'b'}
+    for k, v in config.items():
+        assert isinstance(k, str)
+        if k in ['a']:
+            assert isinstance(v, Config)
+        else:
+            assert isinstance(v, int)
 
     d2 = dict(
         a=dict(b=4, c=5),
@@ -32,3 +38,10 @@ def test_config():
     assert config.c.e == 6
     assert config.c.f == 7
     assert set(config) == {'a', 'b', 'c'}
+
+    for k, v in config.items():
+        assert isinstance(k, str)
+        if k in ['a', 'c']:
+            assert isinstance(v, Config)
+        else:
+            assert isinstance(v, int)
