@@ -1,0 +1,71 @@
+# pde constants
+pde:
+  omega0: 10.0
+  omega1: 10.0
+  rho: 1.0
+  mu: 1.0
+  r0: &r0 0.1
+  r1: &r1 10.0
+
+# computation hack
+numerical:
+  theta_singularity: 0.1
+  degrees: [ 0, 2, 4, 6, 8, 12, 14, 16, 18, 20 ]
+
+# network architecture
+network:
+  monomial_degrees: [ 1, 2 ]
+  network_type: ResNet
+  n_resblocks: 1
+  resblock_units: 1024
+  activation: Swish1
+
+# curriculum
+run:
+  r0_start: 0.1
+  r1_start: 10.0
+  n_train_batches: 4
+  n_valid_batches: 0
+  n_curricula: 10
+  epochs_per_curriculum: 4000
+
+# weight function
+weighting:
+  r_mom: &default_weight
+    weight: 1.
+    type: softstep
+    a: 10.
+    b: 10.
+  theta_mom: *default_weight
+  phi_mom: *default_weight
+  div: *default_weight
+
+# monitor
+monitor:
+  r0: *r0
+  r1: *r1
+  theta0: 0.1
+  theta1: 3.041592653589793
+  phi0: 0.0
+  phi1: 6.283185307179586
+  shape: [ 32, 16, 2 ]
+  r_scale: log
+  residual_check_every: 1000
+  solution_check_every: 100
+
+# generator
+generator:
+  r0: *r0
+  r1: *r1
+  type: spherical
+  method: equally-radius-noisy
+  base_train_size: 2048
+  base_valid_size: 2048
+
+# optimizer
+optimizer:
+  lr: 0.005
+  type: Adam
+  beta0: 0.9
+  beta1: 0.999
+  grad-clip: null
