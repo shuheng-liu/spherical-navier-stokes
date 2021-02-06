@@ -21,3 +21,18 @@ def test_set_weighting(root_config):
         if isinstance(w_fn.fn, SoftStep):
             for arg_name, arg_value in getattr(wconfig, eq).args.items():
                 assert getattr(w_fn.fn, arg_name) == arg_value
+
+
+def test_set_equations(root_config):
+    pde_cfg = root_config.pde
+    numerical_cfg = root_config.numerical
+
+    s = Session()
+    s.set_equations(pde_cfg=pde_cfg, numerical_cfg=numerical_cfg)
+    assert s.pdes.r0 == pde_cfg.r0
+    assert s.pdes.r1 == pde_cfg.r1
+    assert s.pdes.omega0 == pde_cfg.omega0
+    assert s.pdes.omega1 == pde_cfg.omega1
+    assert s.pdes.rho == pde_cfg.rho
+    assert s.pdes.mu == pde_cfg.mu
+    assert s.pdes.harmonics_fn.degrees == numerical_cfg.degrees
