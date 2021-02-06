@@ -40,3 +40,11 @@ class ScalarComposition(WeightFunction):
 
     def __call__(self, *args, **kwargs):
         return self.alpha * self.fn(*args, **kwargs)
+
+
+def get_fn_by_name(name):
+    name = name.lower().replace('-', '').replace('_', '')
+    if name == 'softstep':
+        return SoftStep
+    else:
+        raise ValueError(f'Unknown weighting function "{name}"')
