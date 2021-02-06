@@ -37,3 +37,8 @@ class Config:
 
     def __repr__(self):
         return f'Config({self._name}){[k for k in self.__dict__]}'
+
+    def __iter__(self):
+        for k in self.__dict__:
+            if k != '_name':
+                yield k
