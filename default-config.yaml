@@ -34,8 +34,9 @@ weighting:
   r_mom: &default_weight
     weight: 1.
     type: softstep
-    a: 10.
-    b: 10.
+    args:
+      a: 10.
+      b: 10.
   theta_mom: *default_weight
   phi_mom: *default_weight
   div: *default_weight
