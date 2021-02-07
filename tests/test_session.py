@@ -1,4 +1,5 @@
 import pytest
+import torch
 import torch.nn as nn
 from session import Session
 from weighting import ScalarComposition, get_fn_by_name, SoftStep
@@ -41,3 +42,9 @@ def test_set_networks(root_config, s):
     s.set_networks(root_config)
     for net in s.nets:
         assert isinstance(net, nn.Module)
+
+
+def test_set_optimizer(root_config, s):
+    s.set_networks(root_config)
+    s.set_optimizer(root_config)
+    assert isinstance(s.optimizer, torch.optim.Optimizer)
