@@ -76,5 +76,4 @@ optimizer:
   type: Adam
   kwargs:
     lr: 0.005
-    beta0: 0.9
-    beta1: 0.999
+    betas: [ 0.9, 0.999 ]
