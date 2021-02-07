@@ -2,6 +2,7 @@ import pytest
 import torch
 import torch.nn as nn
 from networks import ModelFactory
+from neurodiffeq.networks import MonomialNN
 from config import Config
 
 
@@ -40,7 +41,17 @@ def sequential(linear1, linear2):
     )
 
 
-def test_model_factory(linear1, sequential):
+@pytest.fixture
+def monomial():
+    return dict(
+        module_type='monomialnn',
+        kwargs=dict(
+            degrees=[1, 2]
+        )
+    )
+
+
+def test_model_factory(linear1, sequential, monomial):
     model = ModelFactory.from_config(
         Config.auto_convert(linear1)
     )
@@ -55,3 +66,9 @@ def test_model_factory(linear1, sequential):
     assert isinstance(model, nn.Sequential)
     x = torch.rand(10, 3)
     assert tuple(model(x).shape) == (10, 5)
+
+    model = ModelFactory.from_config(
+        Config.auto_convert(monomial)
+    )
+    assert isinstance(model, MonomialNN)
+    assert set(model.degrees) == set(monomial['kwargs']['degrees'])
