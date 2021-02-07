@@ -1,7 +1,9 @@
+from itertools import chain
 from weighting import ScalarComposition, get_fn_by_name, WeightedResiduals
 from equations import ZonalHarmonicsNS
 from neurodiffeq.function_basis import ZonalSphericalHarmonics
 from networks import ModelFactory
+from optimizer import OptimizerFactory
 from config import Config
 
 
@@ -33,3 +35,7 @@ class Session:
 
     def set_networks(self, cfg):
         self.nets = [ModelFactory.from_config(c) for _, c in cfg.network.items()]
+
+    def set_optimizer(self, cfg):
+        optimizer_getter = OptimizerFactory.from_config(cfg.optimizer)
+        self.optimizer = optimizer_getter(chain.from_iterable(n.parameters() for n in self.nets))
