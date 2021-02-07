@@ -39,9 +39,8 @@ class ResBlock(nn.Module):
         return self.acv2(x + y)
 
 
-class Resnet(nn.Module):
+class Resnet(nn.Sequential):
     def __init__(self, n_input_units, n_output_units, n_res_blocks, n_res_units, actv=None):
-        super(Resnet, self).__init__()
         if actv is None:
             actv = Swish
         layers = []
@@ -50,10 +49,7 @@ class Resnet(nn.Module):
         for i in range(n_res_blocks):
             layers.append(ResBlock(n_res_units, act1=actv(), act2=actv()))
         layers.append(nn.Linear(n_res_units, n_output_units))
-        self.layers = nn.Sequential(*layers)
-
-    def forward(self, x):
-        return self.layers(x)
+        nn.Sequential.__init__(self, *layers)
 
 
 class ModelFactory:
@@ -92,7 +88,7 @@ class ModelFactory:
     def get_activation(actv_name):
         if not isinstance(actv_name, str):
             raise TypeError(f"actv_name={actv_name} must be str, got {type(actv_name)}")
-        actv = ModelFactory.activations.get(actv_name)
+        actv = ModelFactory.activations.get(actv_name.lower())
         if not actv:
             raise ValueError(
                 f"Unknown activation type {actv_name}, must be one of {list(ModelFactory.activations.keys())}"
