@@ -1,4 +1,5 @@
 import pytest
+import torch.nn as nn
 from session import Session
 from weighting import ScalarComposition, get_fn_by_name, SoftStep
 from config import Config
@@ -9,10 +10,14 @@ def root_config():
     return Config.from_yml_file('../default-config.yaml')
 
 
-def test_set_weighting(root_config):
+@pytest.fixture
+def s():
+    return Session()
+
+
+def test_set_weighting(root_config, s):
     wconfig = root_config.weighting
 
-    s = Session()
     s.set_weighting(weighting_cfg=wconfig)
     for eq, w_fn in s.weight_fns.items():
         assert isinstance(w_fn, ScalarComposition)
@@ -23,11 +28,10 @@ def test_set_weighting(root_config):
                 assert getattr(w_fn.fn, arg_name) == arg_value
 
 
-def test_set_equations(root_config):
+def test_set_equations(root_config, s):
     pde_cfg = root_config.pde
     numerical_cfg = root_config.numerical
 
-    s = Session()
     s.set_equations(pde_cfg=pde_cfg, numerical_cfg=numerical_cfg)
     assert s.pdes.r0 == pde_cfg.r0
     assert s.pdes.r1 == pde_cfg.r1
@@ -36,3 +40,10 @@ def test_set_equations(root_config):
     assert s.pdes.rho == pde_cfg.rho
     assert s.pdes.mu == pde_cfg.mu
     assert s.pdes.harmonics_fn.degrees == numerical_cfg.degrees
+
+
+def test_set_networks(root_config, s):
+    s = Session()
+    s.set_networks(root_config.network)
+    for net in s.nets:
+        assert isinstance(net, nn.Module)
