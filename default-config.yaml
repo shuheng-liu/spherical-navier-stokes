@@ -14,11 +14,21 @@ numerical:
 
 # network architecture
 network:
-  monomial_degrees: [ 1, 2 ]
-  network_type: ResNet
-  n_resblocks: 1
-  resblock_units: 1024
-  activation: Swish1
+  ur: &default_net
+    module_type: sequential
+    args:
+      - module_type: monomialnn
+        kwargs:
+          degrees: [ 1, 2 ]
+      - module_type: resnet
+        args: [ 2, 10 ]
+        kwargs:
+          n_res_blocks: 1
+          n_res_units: 1024
+          actv: Swish1
+  utheta: *default_net
+  uphi: *default_net
+  p: *default_net
 
 # curriculum
 run:
