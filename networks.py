@@ -129,6 +129,12 @@ class ModelFactory:
         if not isinstance(cfg, Config):
             return cfg
 
+        if cfg.module_type is None:
+            if cfg.is_list:
+                return list(cfg)
+            else:
+                return {k: cfg.__dict__[k] for k in cfg}
+
         ModelClass = ModelFactory.get_model(cfg)
         args = ModelFactory.parse_args(cfg)
         kwargs = ModelFactory.parse_kwargs(cfg)
