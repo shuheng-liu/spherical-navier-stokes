@@ -6,7 +6,8 @@ from config import Config
 
 
 class Session:
-    def set_weighting(self, weighting_cfg):
+    def set_weighting(self, cfg):
+        weighting_cfg = cfg.weighting
         if weighting_cfg is None:
             raise ValueError('weight_cfg = None')
 
@@ -18,8 +19,8 @@ class Session:
             for eq, cfg in weighting_cfg.items()
         }
 
-    def set_equations(self, pde_cfg, numerical_cfg):
-        harmonics_fn = ZonalSphericalHarmonics(degrees=numerical_cfg.degrees)
+    def set_equations(self, cfg):
+        pde_cfg = cfg.pde
         self.pdes = ZonalHarmonicsNS(
             rho=pde_cfg.rho,
             mu=pde_cfg.mu,
@@ -27,8 +28,8 @@ class Session:
             omega1=pde_cfg.omega1,
             r0=pde_cfg.r0,
             r1=pde_cfg.r1,
-            harmonics_fn=harmonics_fn,
+            harmonics_fn=ZonalSphericalHarmonics(degrees=list(cfg.numerical.degrees.items())),
         )
 
-    def set_networks(self, network_cfg):
-        self.nets = [ModelFactory.from_config(cfg) for _, cfg in network_cfg.items()]
+    def set_networks(self, cfg):
+        self.nets = [ModelFactory.from_config(c) for _, c in cfg.network.items()]
