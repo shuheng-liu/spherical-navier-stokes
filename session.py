@@ -1,6 +1,7 @@
 from weighting import ScalarComposition, get_fn_by_name, WeightedResiduals
 from equations import ZonalHarmonicsNS
 from neurodiffeq.function_basis import ZonalSphericalHarmonics
+from networks import ModelFactory
 from config import Config
 
 
@@ -28,3 +29,6 @@ class Session:
             r1=pde_cfg.r1,
             harmonics_fn=harmonics_fn,
         )
+
+    def set_networks(self, network_cfg):
+        self.nets = [ModelFactory.from_config(cfg) for _, cfg in network_cfg.items()]
