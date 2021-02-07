@@ -34,7 +34,7 @@ def test_set_equations(root_config, s):
     assert s.pdes.omega1 == root_config.pde.omega1
     assert s.pdes.rho == root_config.pde.rho
     assert s.pdes.mu == root_config.pde.mu
-    assert s.pdes.harmonics_fn.degrees == list(root_config.numerical.degrees.items())
+    assert s.pdes.harmonics_fn.degrees == list(root_config.pde.degrees.items())
 
 
 def test_set_networks(root_config, s):

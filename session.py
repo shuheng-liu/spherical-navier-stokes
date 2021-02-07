@@ -28,7 +28,7 @@ class Session:
             omega1=pde_cfg.omega1,
             r0=pde_cfg.r0,
             r1=pde_cfg.r1,
-            harmonics_fn=ZonalSphericalHarmonics(degrees=list(cfg.numerical.degrees.items())),
+            harmonics_fn=ZonalSphericalHarmonics(degrees=list(pde_cfg.degrees.items())),
         )
 
     def set_networks(self, cfg):

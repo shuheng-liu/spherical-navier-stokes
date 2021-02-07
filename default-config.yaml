@@ -6,11 +6,8 @@ pde:
   mu: 1.0
   r0: &r0 0.1
   r1: &r1 10.0
-
-# computation hack
-numerical:
-  theta_singularity: 0.1
   degrees: [ 0, 2, 4, 6, 8, 12, 14, 16, 18, 20 ]
+  theta_singularity: 0.1
 
 # network architecture
 network:
@@ -31,13 +28,23 @@ network:
   p: *default_net
 
 # curriculum
-run:
+curriculum:
   r0_start: 0.1
   r1_start: 10.0
-  n_train_batches: 4
-  n_valid_batches: 0
   n_curricula: 10
   epochs_per_curriculum: 4000
+  train:
+    n_batches: 4
+    base_size: 2048
+    generator:
+      type: spherical
+      method: equally-radius-noisy
+  valid:
+    n_batches: 0
+    base_size: 2048
+    generator:
+      type: spherical-static
+      method: equally-radius-noisy
 
 # weight function
 weighting:
@@ -64,19 +71,10 @@ monitor:
   residual_check_every: 1000
   solution_check_every: 100
 
-# generator
-generator:
-  r0: *r0
-  r1: *r1
-  type: spherical
-  method: equally-radius-noisy
-  base_train_size: 2048
-  base_valid_size: 2048
-
 # optimizer
 optimizer:
-  lr: 0.005
   type: Adam
-  beta0: 0.9
-  beta1: 0.999
-  grad-clip: null
+  kwargs:
+    lr: 0.005
+    beta0: 0.9
+    beta1: 0.999
