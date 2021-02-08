@@ -1,6 +1,7 @@
 import pytest
 import torch
 import torch.nn as nn
+from neurodiffeq.callbacks import MonitorCallback
 from session import Session
 from weighting import ScalarComposition, get_fn_by_name, SoftStep
 from config import Config
@@ -12,12 +13,11 @@ def root_config():
 
 
 @pytest.fixture
-def s():
-    return Session()
+def s(root_config):
+    return Session(root_config)
 
 
 def test_set_weighting(root_config, s):
-    s.set_weighting(root_config)
     for eq, w_fn in s.weight_fns.items():
         assert isinstance(w_fn, ScalarComposition)
         assert w_fn.alpha == getattr(root_config.weighting, eq).weight
@@ -28,23 +28,25 @@ def test_set_weighting(root_config, s):
 
 
 def test_set_equations(root_config, s):
-    s.set_equations(root_config)
     assert s.pdes.r0 == root_config.pde.r0
     assert s.pdes.r1 == root_config.pde.r1
     assert s.pdes.omega0 == root_config.pde.omega0
     assert s.pdes.omega1 == root_config.pde.omega1
     assert s.pdes.rho == root_config.pde.rho
     assert s.pdes.mu == root_config.pde.mu
-    assert s.pdes.harmonics_fn.degrees == list(root_config.pde.degrees.items())
+    assert s.harmonics_fn.degrees == list(root_config.pde.degrees.items())
 
 
 def test_set_networks(root_config, s):
-    s.set_networks(root_config)
     for net in s.nets:
         assert isinstance(net, nn.Module)
 
 
 def test_set_optimizer(root_config, s):
-    s.set_networks(root_config)
-    s.set_optimizer(root_config)
     assert isinstance(s.optimizer, torch.optim.Optimizer)
+
+
+def test_set_monitors(root_config, s):
+    assert isinstance(s.monitor_callbacks, list)
+    for m in s.monitor_callbacks:
+        isinstance(m, MonitorCallback)
