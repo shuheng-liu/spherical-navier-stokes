@@ -33,15 +33,18 @@ curriculum:
   r1_start: 10.0
   n_curricula: 10
   epochs_per_curriculum: 4000
+  advance_method: log
+  size_method: log
+  base_size: 2048
+  min_size: 512
+  max_size: 2048
   train:
     n_batches: 4
-    base_size: 2048
     generator:
       type: spherical
       method: equally-radius-noisy
   valid:
     n_batches: 0
-    base_size: 2048
     generator:
       type: spherical-static
       method: equally-radius-noisy
