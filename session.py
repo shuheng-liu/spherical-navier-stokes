@@ -6,6 +6,7 @@ from neurodiffeq.monitors import MonitorSphericalHarmonics
 from networks import ModelFactory
 from optimizers import OptimizerFactory
 from monitors import MonitorCallbackFactory
+from curriculum import CurriculumFactory
 from config import Config
 
 
@@ -55,5 +56,4 @@ class Session:
         self.monitor_callbacks = MonitorCallbackFactory.from_config(cfg.monitor, self.pdes, self.harmonics_fn)
 
     def set_curriculum(self, cfg):
-        # TODO set curriculum
-        pass
+        self.curriculum = CurriculumFactory.from_config(cfg)
