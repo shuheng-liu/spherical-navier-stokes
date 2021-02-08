@@ -5,6 +5,7 @@ from neurodiffeq.callbacks import MonitorCallback
 from session import Session
 from weighting import ScalarComposition, get_fn_by_name, SoftStep
 from config import Config
+from curriculum import BaseCurriculumLearner
 
 
 @pytest.fixture
@@ -50,3 +51,7 @@ def test_set_monitors(root_config, s):
     assert isinstance(s.monitor_callbacks, list)
     for m in s.monitor_callbacks:
         isinstance(m, MonitorCallback)
+
+
+def test_set_curriculum(root_config, s):
+    assert isinstance(s.curriculum, BaseCurriculumLearner)
