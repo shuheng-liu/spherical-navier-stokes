@@ -58,18 +58,26 @@ weighting:
   phi_mom: *default_weight
   div: *default_weight
 
+'(default-monitor)': &default-monitor
+  r_min: *r0
+  r_max: *r1
+  theta_min: 0.1
+  theta_max: 3.041592653589793
+  phi_min: 0.0
+  phi_max: 6.283185307179586
+  r_scale: log
+  shape: [ 32, 16, 2 ]
+
 # monitor
 monitor:
-  r0: *r0
-  r1: *r1
-  theta0: 0.1
-  theta1: 3.041592653589793
-  phi0: 0.0
-  phi1: 6.283185307179586
-  shape: [ 32, 16, 2 ]
-  r_scale: log
-  residual_check_every: 1000
-  solution_check_every: 100
+  residual:
+    <<: *default-monitor
+    check_every: 1000
+    fig_dir: figs/residual
+  solution:
+    <<: *default-monitor
+    check_every: 100
+    fig_dir: figs/solution
 
 # optimizer
 optimizer:
