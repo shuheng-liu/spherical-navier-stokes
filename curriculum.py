@@ -3,7 +3,7 @@ import torch
 import numpy as np
 from abc import ABC, abstractmethod
 from neurodiffeq.solvers import BaseSolver
-from neurodiffeq.generators import SamplerGenerator
+from neurodiffeq.generators import SamplerGenerator, GeneratorSpherical, Generator3D
 
 
 class BaseCurriculumLearner(ABC):
@@ -86,3 +86,33 @@ class RadialCurriculumLearner(BaseCurriculumLearner):
             self.r_outers[curr_i],
         )
         return g if isinstance(g, SamplerGenerator) else SamplerGenerator(g)
+
+
+class CurriculumFactory:
+    @staticmethod
+    def from_config(root_cfg):
+        def generator_meta_getter(phase):
+            generator_config = getattr(root_cfg.curriculum, phase).generator
+
+            def generator_getter(size, r0, r1):
+                if generator_config.type.lower() == 'spherical':
+                    return GeneratorSpherical(size, r0, r1, method=generator_config.method)
+                else:
+                    raise ValueError("")
+
+            return generator_getter
+
+        return RadialCurriculumLearner(
+            n_curricula=root_cfg.curriculum.n_curricula,
+            train_gen_getter=generator_meta_getter('train'),
+            valid_gen_getter=generator_meta_getter('valid'),
+            base_size=root_cfg.curriculum.base_size,
+            r_in_from=root_cfg.curriculum.r0_start,
+            r_in_to=root_cfg.pde.r0,
+            r_out_from=root_cfg.curriculum.r1_start,
+            r_out_to=root_cfg.pde.r1,
+            advance_method=root_cfg.curriculum.advance_method,
+            size_method=root_cfg.curriculum.size_method,
+            min_size=root_cfg.curriculum.min_size,
+            max_size=root_cfg.curriculum.max_size,
+        )
