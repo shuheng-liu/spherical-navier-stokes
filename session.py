@@ -3,7 +3,7 @@ from weighting import ScalarComposition, get_fn_by_name, WeightedResiduals
 from equations import ZonalHarmonicsNS
 from neurodiffeq.function_basis import ZonalSphericalHarmonics
 from networks import ModelFactory
-from optimizer import OptimizerFactory
+from optimizers import OptimizerFactory
 from config import Config
 
 
