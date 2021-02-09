@@ -6,7 +6,7 @@ pde:
   mu: 1.0
   r0: &r0 0.1
   r1: &r1 10.0
-  degrees: [ 0, 2, 4, 6, 8, 12, 14, 16, 18, 20, 22, 24, 26, 28 ,30, 32, 34, 36 ]
+  degrees: [ 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28 ,30, 32, 34, 36 ]
   theta_singularity: 0.1
 
 # condition (parameterization)
