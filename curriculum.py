@@ -3,7 +3,7 @@ import torch
 import numpy as np
 from abc import ABC, abstractmethod
 from neurodiffeq.solvers import BaseSolver
-from neurodiffeq.generators import SamplerGenerator, GeneratorSpherical, Generator3D
+from neurodiffeq.generators import SamplerGenerator, GeneratorSpherical, Generator3D, StaticGenerator
 
 
 class BaseCurriculumLearner(ABC):
@@ -97,8 +97,10 @@ class CurriculumFactory:
             def generator_getter(size, r0, r1):
                 if generator_config.type.lower() == 'spherical':
                     return GeneratorSpherical(size, r0, r1, method=generator_config.method)
+                elif generator_config.type.lower() == 'spherical-static':
+                    return StaticGenerator(GeneratorSpherical(size, r0, r1, method=generator_config.method))
                 else:
-                    raise ValueError("")
+                    raise ValueError(f"Unknown generator type {generator_config.type}")
 
             return generator_getter
 
