@@ -1,8 +1,10 @@
 import pytest
 import torch
 import torch.nn as nn
+import numpy as np
 from neurodiffeq.callbacks import MonitorCallback
 from neurodiffeq.conditions import BaseCondition
+from neurodiffeq.solvers import BaseSolver
 from session import Session
 from weighting import ScalarComposition, get_fn_by_name, SoftStep
 from config import Config
@@ -19,7 +21,7 @@ def s(root_config):
     return Session(root_config)
 
 
-def test_set_weighting(root_config, s):
+def test_weighting(root_config, s):
     for eq, w_fn in s.weight_fns.items():
         assert isinstance(w_fn, ScalarComposition)
         assert w_fn.alpha == getattr(root_config.weighting, eq).weight
@@ -29,7 +31,7 @@ def test_set_weighting(root_config, s):
                 assert getattr(w_fn.fn, arg_name) == arg_value
 
 
-def test_set_equations(root_config, s):
+def test_equations(root_config, s):
     assert s.pdes.r0 == root_config.pde.r0
     assert s.pdes.r1 == root_config.pde.r1
     assert s.pdes.omega0 == root_config.pde.omega0
@@ -39,26 +41,35 @@ def test_set_equations(root_config, s):
     assert s.harmonics_fn.degrees == list(root_config.pde.degrees.items())
 
 
-def test_set_networks(root_config, s):
+def test_networks(root_config, s):
     for net in s.nets:
         assert isinstance(net, nn.Module)
 
 
-def test_set_optimizer(root_config, s):
+def test_optimizer(root_config, s):
     assert isinstance(s.optimizer, torch.optim.Optimizer)
 
 
-def test_set_monitors(root_config, s):
+def test_monitors(root_config, s):
     assert isinstance(s.monitor_callbacks, list)
     for m in s.monitor_callbacks:
         isinstance(m, MonitorCallback)
 
 
-def test_set_curriculum(root_config, s):
+def test_curriculum(root_config, s):
     assert isinstance(s.curriculum, BaseCurriculumLearner)
 
 
-def test_set_conditions(root_config, s):
-    assert set(s.conditions.keys()) == {'ur', 'uphi', 'utheta', 'p'}
-    for k in s.conditions:
-        assert isinstance(s.conditions[k], BaseCondition)
+def test_conditions(root_config, s):
+    for c in s.conditions:
+        assert isinstance(c, BaseCondition)
+
+
+def test_solver(root_config, s):
+    assert isinstance(s.solver, BaseSolver)
+    weights_before = [p.detach().cpu().numpy() for n in s.nets for p in n.parameters()]
+    w_before = np.concatenate([w.flatten() for w in weights_before])
+    s.solver.fit(max_epochs=1)
+    weights_after = [p.detach().cpu().numpy() for n in s.nets for p in n.parameters()]
+    w_after = np.concatenate([w.flatten() for w in weights_after])
+    assert (w_before != w_after).any()
