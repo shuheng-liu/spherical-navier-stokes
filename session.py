@@ -67,3 +67,9 @@ class Session:
             n_batches_valid=cfg.curriculum.valid.n_batches,
         )
 
+    def fit(self):
+        self.curriculum.fit(
+            solver=self.solver,
+            epochs_per_curriculum=self.root_cfg.curriculum.epochs_per_curriculum,
+            callbacks=self.monitor_callbacks + self.callbacks,
+        )
