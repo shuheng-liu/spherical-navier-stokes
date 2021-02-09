@@ -2,6 +2,7 @@ import pytest
 import torch
 import torch.nn as nn
 from neurodiffeq.callbacks import MonitorCallback
+from neurodiffeq.conditions import BaseCondition
 from session import Session
 from weighting import ScalarComposition, get_fn_by_name, SoftStep
 from config import Config
@@ -55,3 +56,9 @@ def test_set_monitors(root_config, s):
 
 def test_set_curriculum(root_config, s):
     assert isinstance(s.curriculum, BaseCurriculumLearner)
+
+
+def test_set_conditions(root_config, s):
+    assert set(s.conditions.keys()) == {'ur', 'uphi', 'utheta', 'p'}
+    for k in s.conditions:
+        assert isinstance(s.conditions[k], BaseCondition)
