@@ -36,7 +36,7 @@ class ResBlock(nn.Module):
         x = self.lin1(x)
         x = self.act1(x)
         x = self.lin2(x)
-        return self.acv2(x + y)
+        return self.act2(x + y)
 
 
 class Resnet(nn.Sequential):
