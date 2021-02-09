@@ -6,26 +6,38 @@ pde:
   mu: 1.0
   r0: &r0 0.1
   r1: &r1 10.0
-  degrees: [ 0, 2, 4, 6, 8, 12, 14, 16, 18, 20 ]
+  degrees: [ 0, 2, 4, 6, 8, 12, 14, 16, 18, 20, 22, 24, 26, 28 ,30, 32, 34, 36 ]
   theta_singularity: 0.1
+
+# condition (parameterization)
+condition:
+  ur:
+    type: shift
+  utheta:
+    type: shift
+  uphi:
+    type: shift
+  p:
+    type: reverse
+
 
 # network architecture
 network:
-  ur: &default_net
+  ur: &default-net
     module_type: sequential
     args:
       - module_type: monomialnn
         kwargs:
           degrees: [ 1, 2 ]
       - module_type: resnet
-        args: [ 2, 10 ]
+        args: [ 2, 19 ]
         kwargs:
           n_res_blocks: 1
           n_res_units: 1024
           actv: Swish1
-  utheta: *default_net
-  uphi: *default_net
-  p: *default_net
+  utheta: *default-net
+  uphi: *default-net
+  p: *default-net
 
 # curriculum
 curriculum:
@@ -51,15 +63,15 @@ curriculum:
 
 # weight function
 weighting:
-  r_mom: &default_weight
+  r_mom: &default-weight
     weight: 1.
     type: softstep
     args:
       a: 10.
       b: 10.
-  theta_mom: *default_weight
-  phi_mom: *default_weight
-  div: *default_weight
+  theta_mom: *default-weight
+  phi_mom: *default-weight
+  div: *default-weight
 
 '(default-monitor)': &default-monitor
   r_min: *r0
