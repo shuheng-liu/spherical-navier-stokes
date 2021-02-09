@@ -7,6 +7,7 @@ from networks import ModelFactory
 from optimizers import OptimizerFactory
 from monitors import MonitorCallbackFactory
 from curriculum import CurriculumFactory
+from conditions import ConditionFactory
 from config import Config
 
 
@@ -44,3 +45,5 @@ class Session:
         self.monitor_callbacks = MonitorCallbackFactory.from_config(cfg.monitor, self.pdes, self.harmonics_fn)
         # set curriculum
         self.curriculum = CurriculumFactory.from_config(cfg)
+        # set conditions
+        self.conditions = ConditionFactory.from_config(cfg)
