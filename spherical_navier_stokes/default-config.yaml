@@ -115,6 +115,7 @@ monitor:
     density: 3.0
     net_r_index: 0
     net_theta_index: 1
+    fig_dir: figs/field
 
 # optimizer
 optimizer:
