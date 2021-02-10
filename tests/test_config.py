@@ -1,4 +1,7 @@
+import yaml
 import pytest
+import shutil
+from pathlib import Path
 from config import Config
 
 
@@ -30,6 +33,20 @@ def d3():
             ]
         ]
     }
+
+
+@pytest.fixture
+def tmp_dir():
+    path = Path('./tmp-test')
+    path.mkdir(parents=True, exist_ok=True)
+    yield path
+    if path.is_dir() and path.exists():
+        shutil.rmtree(path)
+
+
+@pytest.fixture
+def default_config():
+    return Config.from_yml_file('../default-config.yaml')
 
 
 def test_config_list(d3):
@@ -93,3 +110,16 @@ def test_config(d1, d2):
             assert isinstance(v, Config)
         else:
             assert isinstance(v, int)
+
+
+def test_config_to_builtin(default_config):
+    assert isinstance(Config.to_builtin(default_config), dict)
+
+
+def test_config_to_yaml(default_config, tmp_dir):
+    yml_str = default_config.to_yml()
+    yaml.safe_load(yml_str)
+    f = tmp_dir / 'test.yaml'
+    default_config.to_yml_file(f)
+    with open(f) as f:
+        yaml.safe_load(f)
