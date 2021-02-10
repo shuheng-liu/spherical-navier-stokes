@@ -22,6 +22,25 @@ def root_config():
     return default_config
 
 
+def rm_if_exist(path):
+    if path.exists() and path.is_dir():
+        shutil.rmtree(path)
+
+
+@pytest.fixture(autouse=True)
+def clean_everything(root_config, modified_config):
+    yield
+    root_base = Path(root_config.meta.base_path)
+    rm_if_exist(root_base / root_config.meta.output_path)
+    rm_if_exist(root_base / root_config.meta.log_path)
+    rm_if_exist(root_base / root_config.monitor.residual.fig_dir)
+    rm_if_exist(root_base / root_config.monitor.solution.fig_dir)
+
+    modified_base = Path(modified_config.meta.base_path)
+    rm_if_exist(modified_base / modified_config.meta.output_path)
+    rm_if_exist(modified_base / modified_config.meta.log_path)
+
+
 @pytest.fixture
 def s(root_config):
     return Session(root_config)
@@ -69,21 +88,20 @@ def s2(modified_config):
     return Session(modified_config)
 
 
-@pytest.fixture
-def tmp_dir():
-    path = Path('./test-tmp')
+@pytest.fixture(autouse=True)
+def tmp_dir(root_config):
+    path = Path(root_config.meta.base_path) / 'test-tmp'
+    path = path.absolute()
     path.mkdir(parents=True, exist_ok=True)
     yield path
-    if path.exists() and path.is_dir():
-        shutil.rmtree(path)
+    rm_if_exist(path)
 
 
 @pytest.fixture(autouse=True)
 def fig_dir():
     path = Path('./figs')
     yield
-    if path.exists() and path.is_dir():
-        shutil.rmtree(path)
+    rm_if_exist(path)
 
 
 def test_weighting(root_config, s):
@@ -153,7 +171,6 @@ def test_dump(modified_config, s2, tmp_dir):
     assert s2.root_cfg.meta.log_path == tmp_dir.as_posix()
     assert s2.root_cfg.meta.output_path == tmp_dir.as_posix()
     s2.dump()
-    assert len(os.listdir(tmp_dir)) == 2
     assert 'config.yaml' in os.listdir(tmp_dir)
     found_internals = False
     for filename in os.listdir(tmp_dir):

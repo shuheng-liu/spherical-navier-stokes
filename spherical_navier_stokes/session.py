@@ -1,3 +1,4 @@
+import os
 import sys
 import logging
 from itertools import chain
@@ -20,7 +21,7 @@ class Session:
         self.root_cfg = cfg
 
         self.logger.propagate = 0
-        log_path = Path(cfg.meta.log_path) / cfg._name
+        log_path = Path(cfg.meta.base_path) / cfg.meta.log_path / cfg._name
         log_path.parent.mkdir(parents=True, exist_ok=True)
         handler = logging.FileHandler(filename=log_path)
         handler.setFormatter(logging.Formatter(cfg.meta.log_format))
@@ -72,7 +73,7 @@ class Session:
         optimizer_getter = OptimizerFactory.from_config(cfg.optimizer)
         self.optimizer = optimizer_getter(chain.from_iterable(n.parameters() for n in self.nets))
         # set monitors
-        self.monitor_callbacks = MonitorCallbackFactory.from_config(cfg.monitor, self.pdes, self.harmonics_fn)
+        self.monitor_callbacks = MonitorCallbackFactory.from_config(cfg, self.pdes, self.harmonics_fn)
         # set curriculum
         self.curriculum = CurriculumFactory.from_config(cfg)
         # set conditions
@@ -98,7 +99,7 @@ class Session:
         )
 
     def dump(self, path=None):
-        path = Path(path or self.root_cfg.meta.output_path)
+        path = Path(path or os.path.join(self.root_cfg.meta.base_path, self.root_cfg.meta.output_path))
         dump(self.solver.get_internals(), path / (timestr() + ".internals"))
         self.root_cfg.to_yml_file(path / 'config.yaml')
 

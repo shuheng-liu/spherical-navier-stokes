@@ -41,7 +41,7 @@ class MonitorCallbackFactory:
     @staticmethod
     def from_config(cfg, pde_system, harmonics_fn):
         callbacks = []
-        for k, c in cfg.items():
+        for k, c in cfg.monitor.items():
             MonitorClass = MonitorCallbackFactory.monitors.get(k)
             if not k:
                 raise ValueError(f"Unknown Monitor type {c}")
@@ -50,6 +50,8 @@ class MonitorCallbackFactory:
             if MonitorClass == ResidualMonitorSphericalHarmonics:
                 kwargs['pde_system'] = pde_system
             fig_dir = kwargs.pop('fig_dir', None)
+            if fig_dir:
+                fig_dir = os.path.join(cfg.meta.base_path, fig_dir)
             callbacks.append(MonitorCallback(MonitorClass(**kwargs), fig_dir=fig_dir))
 
         return callbacks

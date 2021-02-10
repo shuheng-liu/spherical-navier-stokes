@@ -1,12 +1,13 @@
 # meta config (for logging, output, etc.)
 meta:
-  log_path: ./logs
+  base_path: .
+  log_path: logs
   log_level: &default-log-level INFO
   log_format: &default-log-format '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
   log_console: true
   log_console_level: *default-log-level
   log_console_format: *default-log-format
-  output_path: ./output
+  output_path: output
 
 # pde constants
 pde:
