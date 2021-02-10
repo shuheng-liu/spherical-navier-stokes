@@ -24,7 +24,7 @@ sine_coeffs = np.array([
     -7.1837041729838397e-04, 0.0000000000000000e+00,
     -6.2385156406174699e-04], dtype=np.float64)
 
-zero_coeffs = np.ones_like(sine_coeffs)
+zero_coeffs = np.zeros_like(sine_coeffs)
 
 
 class SphericalDirichletBVP(BaseCondition):
