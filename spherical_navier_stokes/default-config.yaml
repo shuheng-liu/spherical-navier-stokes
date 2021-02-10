@@ -99,11 +99,22 @@ monitor:
   residual:
     <<: *default-monitor
     check_every: 1000
+    var_names: [ '$u_r$', '$u_\theta$', '$u_\phi$', '$p$' ]
     fig_dir: figs/residual
   solution:
     <<: *default-monitor
     check_every: 100
+    var_names: [ '$\mathrm{Res}_r$', '$\mathrm{Res}_\theta$', '$\mathrm{Res}_\phi$', '$\nabla \cdot \mathbf{u}$' ]
     fig_dir: figs/solution
+  axis-sym:
+    r_min: *r0
+    r_max: *r1
+    theta_min: 0.1
+    theta_max: 3.041592653589793
+    check_every: 100
+    density: 3.0
+    net_r_index: 0
+    net_theta_index: 1
 
 # optimizer
 optimizer:

@@ -124,6 +124,7 @@ class MonitorCallbackFactory:
     monitors = {
         'solution': MonitorSphericalHarmonics,
         'residual': ResidualMonitorSphericalHarmonics,
+        'axis-sym': MonitorAxisymmetricSphericalVectorField,
     }
 
     @staticmethod
