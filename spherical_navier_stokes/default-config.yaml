@@ -43,8 +43,8 @@ network:
         args: [ 2, 19 ]
         kwargs:
           n_res_blocks: 1
-          n_res_units: 1024
-          actv: Swish1
+          n_res_units: 2048
+          actv: Swish2
   utheta: *default-net
   uphi: *default-net
   p: *default-net
