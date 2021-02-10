@@ -1,3 +1,5 @@
+import os
+import re
 import pytest
 import torch
 import torch.nn as nn
@@ -75,6 +77,14 @@ def tmp_dir():
         shutil.rmtree(path)
 
 
+@pytest.fixture(autouse=True)
+def fig_dir():
+    path = Path('./figs')
+    yield
+    if path.exists() and path.is_dir():
+        shutil.rmtree(path)
+
+
 def test_weighting(root_config, s):
     for eq, w_fn in s.weight_fns.items():
         assert isinstance(w_fn, ScalarComposition)
@@ -142,3 +152,10 @@ def test_dump(modified_config, s2, tmp_dir):
     assert s2.root_cfg.meta.log_path == tmp_dir.as_posix()
     assert s2.root_cfg.meta.output_path == tmp_dir.as_posix()
     s2.dump()
+    assert len(os.listdir(tmp_dir)) == 2
+    assert 'config.yaml' in os.listdir(tmp_dir)
+    found_internals = False
+    for filename in os.listdir(tmp_dir):
+        if re.match(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.internals$', filename):
+            found_internals = True
+    assert found_internals
