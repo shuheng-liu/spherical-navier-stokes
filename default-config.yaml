@@ -1,3 +1,8 @@
+# meta config (for logging, output, etc.)
+meta:
+  log_path: ./logs
+  output_path: ./output
+
 # pde constants
 pde:
   omega0: 10.0
