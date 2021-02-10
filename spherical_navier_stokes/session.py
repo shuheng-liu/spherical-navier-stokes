@@ -39,7 +39,7 @@ class Session:
         if cfg.callback is None:
             self.callbacks = [
                 ReportOnFitCallback(logger=self.logger),
-                CheckpointCallback(ckpt_dir=cfg.meta.output_path, logger=self.logger),
+                CheckpointCallback(ckpt_dir=Path(cfg.meta.base_path) / cfg.meta.output_path, logger=self.logger),
             ]
 
         weighting_cfg = cfg.weighting
