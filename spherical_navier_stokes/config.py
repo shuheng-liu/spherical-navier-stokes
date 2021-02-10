@@ -1,4 +1,4 @@
-from utils import recursive_update
+from spherical_navier_stokes.utils import recursive_update
 import functools
 import collections.abc
 import yaml

@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from neurodiffeq.networks import FCNN, MonomialNN, SinActv
-from config import Config
+from spherical_navier_stokes.config import Config
 import functools
 
 

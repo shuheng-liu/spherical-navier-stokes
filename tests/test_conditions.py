@@ -1,10 +1,9 @@
 import torch
 import numpy as np
 from neurodiffeq.networks import FCNN
-from neurodiffeq.generators import Generator1D, SamplerGenerator
 from neurodiffeq.function_basis import ZonalSphericalHarmonics
 
-from conditions import ReverseBVP, SphericalDirichletBVP, SphericalShiftDirichletBVP
+from spherical_navier_stokes.conditions import ReverseBVP, SphericalDirichletBVP, SphericalShiftDirichletBVP
 
 N_SAMPLES = 100
 degrees = [0, 2, 4, 6, 8]

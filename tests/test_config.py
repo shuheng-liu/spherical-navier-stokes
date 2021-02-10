@@ -2,7 +2,7 @@ import yaml
 import pytest
 import shutil
 from pathlib import Path
-from config import Config
+from spherical_navier_stokes.config import Config
 
 
 @pytest.fixture

@@ -1,5 +1,5 @@
 import torch
-from curriculum import RadialCurriculumLearner
+from spherical_navier_stokes.curriculum import RadialCurriculumLearner
 from neurodiffeq.generators import GeneratorSpherical, StaticGenerator
 from neurodiffeq.solvers import SolverSpherical
 from neurodiffeq.conditions import NoCondition

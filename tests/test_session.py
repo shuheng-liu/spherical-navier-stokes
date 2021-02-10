@@ -9,10 +9,10 @@ import shutil
 from neurodiffeq.callbacks import MonitorCallback
 from neurodiffeq.conditions import BaseCondition
 from neurodiffeq.solvers import BaseSolver
-from session import Session
-from weighting import ScalarComposition, get_fn_by_name, SoftStep
-from config import Config
-from curriculum import BaseCurriculumLearner
+from spherical_navier_stokes.session import Session
+from spherical_navier_stokes.weighting import ScalarComposition, get_fn_by_name, SoftStep
+from spherical_navier_stokes.config import Config
+from spherical_navier_stokes.curriculum import BaseCurriculumLearner
 from copy import deepcopy
 
 

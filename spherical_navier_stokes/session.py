@@ -1,16 +1,14 @@
 from itertools import chain
-from weighting import ScalarComposition, get_fn_by_name, WeightedResiduals
-from equations import ZonalHarmonicsNS
+from spherical_navier_stokes.weighting import ScalarComposition, get_fn_by_name
+from spherical_navier_stokes.equations import ZonalHarmonicsNS
 from neurodiffeq.function_basis import ZonalSphericalHarmonics
-from neurodiffeq.monitors import MonitorSphericalHarmonics
 from neurodiffeq.solvers import SolverSpherical
-from networks import ModelFactory
-from optimizers import OptimizerFactory
-from monitors import MonitorCallbackFactory
-from curriculum import CurriculumFactory
-from conditions import ConditionFactory
-from config import Config
-from utils import dump, timestr
+from spherical_navier_stokes.networks import ModelFactory
+from spherical_navier_stokes.optimizers import OptimizerFactory
+from spherical_navier_stokes.monitors import MonitorCallbackFactory
+from spherical_navier_stokes.curriculum import CurriculumFactory
+from spherical_navier_stokes.conditions import ConditionFactory
+from spherical_navier_stokes.utils import dump, timestr
 from pathlib import Path
 
 

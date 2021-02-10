@@ -1,4 +1,3 @@
-import pytest
 import torch
 from torch import sin, cos
 import numpy as np
@@ -8,7 +7,7 @@ from neurodiffeq import diff
 from neurodiffeq.networks import FCNN, Swish
 from neurodiffeq.generators import Generator3D, SamplerGenerator
 from neurodiffeq.function_basis import ZonalSphericalHarmonics, ZonalSphericalHarmonicsLaplacian
-from equations import ZonalHarmonicsNS
+from spherical_navier_stokes.equations import ZonalHarmonicsNS
 
 
 def pde_system(R_ur, R_utheta, R_uphi, R_p, r, theta, phi, mu=1.0, rho=1.0, harmonics_fn=None,

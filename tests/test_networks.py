@@ -1,9 +1,9 @@
 import pytest
 import torch
 import torch.nn as nn
-from networks import ModelFactory
+from spherical_navier_stokes.networks import ModelFactory
 from neurodiffeq.networks import MonomialNN
-from config import Config
+from spherical_navier_stokes.config import Config
 
 
 @pytest.fixture
