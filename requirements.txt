@@ -1,2 +1,2 @@
-neurodiffeq==0.3.1
+git+https://github.com/odegym/neurodiffeq@v0.3.1
 PyYAML
