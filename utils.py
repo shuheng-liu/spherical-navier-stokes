@@ -1,3 +1,6 @@
+import os
+import dill
+import datetime
 import functools
 import collections.abc
 from pathlib import Path
@@ -25,3 +28,18 @@ def recursive_update(d, u):
         else:
             d[k] = v
     return d
+
+
+def dump(obj, path):
+    safe_makedir(os.path.basename(path))
+    with open(path, 'wb') as f:
+        dill.dump(obj, f)
+
+
+def load(path):
+    with open(path, 'rb') as f:
+        return dill.load(f)
+
+
+def timestr():
+    return datetime.datetime.now().strftime("%yyyy-%mm-%dd %H:%M:%S")
