@@ -39,7 +39,7 @@ class MonitorCallbackFactory:
     }
 
     @staticmethod
-    def from_config(cfg, pde_system, harmonics_fn):
+    def from_config(cfg, pde_system, harmonics_fn, logger=None):
         callbacks = []
         for k, c in cfg.monitor.items():
             MonitorClass = MonitorCallbackFactory.monitors.get(k)
@@ -52,6 +52,6 @@ class MonitorCallbackFactory:
             fig_dir = kwargs.pop('fig_dir', None)
             if fig_dir:
                 fig_dir = os.path.join(cfg.meta.base_path, fig_dir)
-            callbacks.append(MonitorCallback(MonitorClass(**kwargs), fig_dir=fig_dir))
+            callbacks.append(MonitorCallback(MonitorClass(**kwargs), fig_dir=fig_dir, logger=logger))
 
         return callbacks
