@@ -21,7 +21,7 @@ class Session:
         self.root_cfg = cfg
 
         self.logger.propagate = 0
-        log_path = Path(cfg.meta.base_path) / cfg.meta.log_path / cfg._name
+        log_path = Path(cfg.meta.base_path) / cfg.meta.log_path / (cfg._name + '.log')
         log_path.parent.mkdir(parents=True, exist_ok=True)
         handler = logging.FileHandler(filename=log_path)
         handler.setFormatter(logging.Formatter(cfg.meta.log_format))
