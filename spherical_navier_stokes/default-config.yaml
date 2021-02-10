@@ -106,7 +106,7 @@ monitor:
     check_every: 100
     var_names: [ '$u_r$', '$u_\theta$', '$u_\phi$', '$p$' ]
     fig_dir: figs/solution
-  axis-sym:
+  axis_sym:
     r_min: *r0
     r_max: *r1
     theta_min: 0.1
