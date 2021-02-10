@@ -2,6 +2,8 @@ import pytest
 import torch
 import torch.nn as nn
 import numpy as np
+from pathlib import Path
+import shutil
 from neurodiffeq.callbacks import MonitorCallback
 from neurodiffeq.conditions import BaseCondition
 from neurodiffeq.solvers import BaseSolver
@@ -23,7 +25,7 @@ def s(root_config):
 
 
 @pytest.fixture
-def modified_config(root_config):
+def modified_config(root_config, tmp_dir):
     small_net = dict(
         module_type='fcnn',
         args=[1, 1],
@@ -34,6 +36,10 @@ def modified_config(root_config):
     )
     config = deepcopy(root_config)
     config.update(dict(
+        meta=dict(
+            log_path=tmp_dir.as_posix(),
+            output_path=tmp_dir.as_posix(),
+        ),
         pde=dict(
             degrees=[0]
         ),
@@ -58,6 +64,15 @@ def modified_config(root_config):
 @pytest.fixture
 def s2(modified_config):
     return Session(modified_config)
+
+
+@pytest.fixture
+def tmp_dir():
+    path = Path('./test-tmp')
+    path.mkdir(parents=True, exist_ok=True)
+    yield path
+    if path.exists() and path.is_dir():
+        shutil.rmtree(path)
 
 
 def test_weighting(root_config, s):
@@ -119,3 +134,11 @@ def test_fit(modified_config, s2):
     assert s2.solver.global_epoch \
            == modified_config.curriculum.n_curricula \
            * modified_config.curriculum.epochs_per_curriculum
+
+
+def test_dump(modified_config, s2, tmp_dir):
+    assert modified_config.meta.output_path == tmp_dir.as_posix()
+    assert modified_config.meta.log_path == tmp_dir.as_posix()
+    assert s2.root_cfg.meta.log_path == tmp_dir.as_posix()
+    assert s2.root_cfg.meta.output_path == tmp_dir.as_posix()
+    s2.dump()
