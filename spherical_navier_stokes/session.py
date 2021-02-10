@@ -73,7 +73,8 @@ class Session:
         optimizer_getter = OptimizerFactory.from_config(cfg.optimizer)
         self.optimizer = optimizer_getter(chain.from_iterable(n.parameters() for n in self.nets))
         # set monitors
-        self.monitor_callbacks = MonitorCallbackFactory.from_config(cfg, self.pdes, self.harmonics_fn, logger=logger)
+        self.monitor_callbacks = \
+            MonitorCallbackFactory.from_config(cfg, self.pdes, self.harmonics_fn, logger=self.logger)
         # set curriculum
         self.curriculum = CurriculumFactory.from_config(cfg)
         # set conditions
