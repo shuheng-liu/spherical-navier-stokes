@@ -86,3 +86,21 @@ class Config:
             for k in self.__dict__:
                 if not k.startswith('_name'):
                     yield k, Config.auto_convert(self.__dict__[k], name=k, base_name=self._name)
+
+    @staticmethod
+    def to_builtin(config):
+        if not isinstance(config, Config):
+            return config
+
+        if config.is_dict:
+            return {k: Config.to_builtin(config.__dict__[k]) for k in config}
+
+        if config.is_list:
+            return [Config.to_builtin(item) for item in Config.__dict__['_list']]
+
+    def to_yml(self):
+        return yaml.safe_dump(Config.to_builtin(self))
+
+    def to_yml_file(self, path):
+        with open(path, 'w') as f:
+            yaml.safe_dump(Config.to_builtin(self), stream=f)
