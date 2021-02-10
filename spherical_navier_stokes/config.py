@@ -1,7 +1,9 @@
+import os
 from spherical_navier_stokes.utils import recursive_update
 import functools
 import collections.abc
 import yaml
+from pathlib import Path
 
 
 class Config:
@@ -32,7 +34,7 @@ class Config:
     @staticmethod
     def from_yml_file(path, name=None):
         with open(path) as f:
-            return Config.auto_convert(yaml.safe_load(f), name=name or path.replace('.', '_'))
+            return Config.auto_convert(yaml.safe_load(f), name=name or os.path.basename(path).replace('.', '_'))
 
     @staticmethod
     def from_yml(yml, name=None):
@@ -104,3 +106,9 @@ class Config:
     def to_yml_file(self, path):
         with open(path, 'w') as f:
             yaml.safe_dump(Config.to_builtin(self), stream=f)
+
+
+try:
+    default_config = Config.from_yml_file(Path(__file__).parent.parent / 'default-config.yaml', name='DEFAULT-CONFIG')
+except FileNotFoundError:
+    default_config = None
