@@ -46,7 +46,7 @@ def tmp_dir():
 
 @pytest.fixture
 def default_config():
-    return Config.from_yml_file('../default-config.yaml')
+    return Config.from_yml_file('./default-config.yaml')
 
 
 def test_config_list(d3):

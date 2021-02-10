@@ -18,7 +18,7 @@ from copy import deepcopy
 
 @pytest.fixture
 def root_config():
-    return Config.from_yml_file('../default-config.yaml')
+    return Config.from_yml_file('./default-config.yaml')
 
 
 @pytest.fixture
