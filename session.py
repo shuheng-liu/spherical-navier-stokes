@@ -10,6 +10,8 @@ from monitors import MonitorCallbackFactory
 from curriculum import CurriculumFactory
 from conditions import ConditionFactory
 from config import Config
+from utils import dump, timestr
+from pathlib import Path
 
 
 class Session:
@@ -73,3 +75,8 @@ class Session:
             epochs_per_curriculum=self.root_cfg.curriculum.epochs_per_curriculum,
             callbacks=self.monitor_callbacks + self.callbacks,
         )
+
+    def dump(self, path=None):
+        path = Path(path or self.root_cfg.meta.output_path)
+        dump(self.solver.get_internals(), path / (timestr() + ".internals"))
+        self.root_cfg.to_yml_file(path / 'config.yaml')
