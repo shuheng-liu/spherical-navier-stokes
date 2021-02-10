@@ -1,3 +1,5 @@
+import sys
+import logging
 from itertools import chain
 from spherical_navier_stokes.weighting import ScalarComposition, get_fn_by_name
 from spherical_navier_stokes.equations import ZonalHarmonicsNS
@@ -9,14 +11,35 @@ from spherical_navier_stokes.monitors import MonitorCallbackFactory
 from spherical_navier_stokes.curriculum import CurriculumFactory
 from spherical_navier_stokes.conditions import ConditionFactory
 from spherical_navier_stokes.utils import dump, timestr
+from neurodiffeq.callbacks import ReportOnFitCallback, CheckpointCallback
 from pathlib import Path
 
 
 class Session:
     def __init__(self, cfg):
         self.root_cfg = cfg
-        # generic callbacks, default to empty
-        self.callbacks = []
+
+        self.logger.propagate = 0
+        log_path = Path(cfg.meta.log_path) / cfg._name
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        handler = logging.FileHandler(filename=log_path)
+        handler.setFormatter(logging.Formatter(cfg.meta.log_format))
+        handler.setLevel(cfg.meta.log_level)
+        self.logger.addHandler(handler)
+
+        if cfg.meta.log_console:
+            handler = logging.StreamHandler(stream=sys.stdout)
+            handler.setFormatter(logging.Formatter(cfg.meta.log_console_format))
+            handler.setLevel(cfg.meta.log_console_level)
+            self.logger.addHandler(handler)
+
+        self.logger.info('\n' + cfg.to_yml())
+
+        if cfg.callback is None:
+            self.callbacks = [
+                ReportOnFitCallback(logger=self.logger),
+                CheckpointCallback(ckpt_dir=cfg.meta.output_path, logger=self.logger),
+            ]
 
         weighting_cfg = cfg.weighting
         if weighting_cfg is None:
@@ -78,3 +101,7 @@ class Session:
         path = Path(path or self.root_cfg.meta.output_path)
         dump(self.solver.get_internals(), path / (timestr() + ".internals"))
         self.root_cfg.to_yml_file(path / 'config.yaml')
+
+    @property
+    def logger(self):
+        return logging.getLogger(self.root_cfg._name)
