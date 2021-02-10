@@ -13,7 +13,7 @@ def partial_class(cls, *args, **kwargs):
     return NewClass
 
 
-def safe_makedir(dir):
+def safe_mkdir(dir):
     Path(dir).mkdir(parents=True, exist_ok=True)
 
 
@@ -31,7 +31,7 @@ def recursive_update(d, u):
 
 
 def dump(obj, path):
-    safe_makedir(os.path.basename(path))
+    safe_mkdir(os.path.dirname(path))
     with open(path, 'wb') as f:
         dill.dump(obj, f)
 
@@ -42,4 +42,4 @@ def load(path):
 
 
 def timestr():
-    return datetime.datetime.now().strftime("%yyyy-%mm-%dd %H:%M:%S")
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
