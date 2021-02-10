@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from neurodiffeq.networks import FCNN, MonomialNN, SinActv
 from config import Config
-from utils import partial_class
+import functools
 
 
 class SwishN(nn.Module):
@@ -15,12 +15,29 @@ class SwishN(nn.Module):
 
 
 Swish0 = nn.Sigmoid
-Swish1 = partial_class(SwishN, order=1)
-Swish2 = partial_class(SwishN, order=2)
-Swish3 = partial_class(SwishN, order=3)
-Swish4 = partial_class(SwishN, order=4)
-Swish5 = partial_class(SwishN, order=5)
+
+
+class Swish1(SwishN):
+    __init__ = functools.partialmethod(SwishN.__init__, order=1)
+
+
 Swish = Swish1
+
+
+class Swish2(SwishN):
+    __init__ = functools.partialmethod(SwishN.__init__, order=2)
+
+
+class Swish3(SwishN):
+    __init__ = functools.partialmethod(SwishN.__init__, order=3)
+
+
+class Swish4(SwishN):
+    __init__ = functools.partialmethod(SwishN.__init__, order=4)
+
+
+class Swish5(SwishN):
+    __init__ = functools.partialmethod(SwishN.__init__, order=5)
 
 
 class ResBlock(nn.Module):
