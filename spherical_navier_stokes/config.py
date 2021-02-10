@@ -109,6 +109,6 @@ class Config:
 
 
 try:
-    default_config = Config.from_yml_file(Path(__file__).parent.parent / 'default-config.yaml', name='DEFAULT-CONFIG')
+    default_config = Config.from_yml_file(Path(__file__).parent / 'default-config.yaml', name='DEFAULT-CONFIG')
 except FileNotFoundError:
     default_config = None

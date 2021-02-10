@@ -2,7 +2,7 @@ import yaml
 import pytest
 import shutil
 from pathlib import Path
-from spherical_navier_stokes.config import Config
+from spherical_navier_stokes.config import Config, default_config
 
 
 @pytest.fixture
@@ -42,11 +42,6 @@ def tmp_dir():
     yield path
     if path.is_dir() and path.exists():
         shutil.rmtree(path)
-
-
-@pytest.fixture
-def default_config():
-    return Config.from_yml_file('./default-config.yaml')
 
 
 def test_config_list(d3):
@@ -112,11 +107,11 @@ def test_config(d1, d2):
             assert isinstance(v, int)
 
 
-def test_config_to_builtin(default_config):
+def test_config_to_builtin():
     assert isinstance(Config.to_builtin(default_config), dict)
 
 
-def test_config_to_yaml(default_config, tmp_dir):
+def test_config_to_yaml(tmp_dir):
     yml_str = default_config.to_yml()
     yaml.safe_load(yml_str)
     f = tmp_dir / 'test.yaml'

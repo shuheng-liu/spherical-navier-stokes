@@ -11,14 +11,15 @@ from neurodiffeq.conditions import BaseCondition
 from neurodiffeq.solvers import BaseSolver
 from spherical_navier_stokes.session import Session
 from spherical_navier_stokes.weighting import ScalarComposition, get_fn_by_name, SoftStep
-from spherical_navier_stokes.config import Config
+from spherical_navier_stokes.config import Config, default_config
 from spherical_navier_stokes.curriculum import BaseCurriculumLearner
 from copy import deepcopy
 
 
 @pytest.fixture
 def root_config():
-    return Config.from_yml_file('./default-config.yaml')
+    assert isinstance(default_config, Config)
+    return default_config
 
 
 @pytest.fixture
