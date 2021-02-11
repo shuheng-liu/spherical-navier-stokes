@@ -101,11 +101,13 @@ monitor:
     check_every: 1000
     var_names: [ '$\mathrm{Res}_r$', '$\mathrm{Res}_\theta$', '$\mathrm{Res}_\phi$', '$\nabla \cdot \mathbf{u}$' ]
     fig_dir: figs/residual
+    format: jpg
   solution:
     <<: *default-monitor
     check_every: 100
     var_names: [ '$u_r$', '$u_\theta$', '$u_\phi$', '$p$' ]
     fig_dir: figs/solution
+    format: jpg
   axis_sym:
     r_min: *r0
     r_max: *r1
@@ -116,6 +118,7 @@ monitor:
     net_r_index: 0
     net_theta_index: 1
     fig_dir: figs/field
+    format: jpg
 
 # optimizer
 optimizer:

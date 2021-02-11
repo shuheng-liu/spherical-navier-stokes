@@ -141,8 +141,9 @@ class MonitorCallbackFactory:
             if MonitorClass == ResidualMonitorSphericalHarmonics:
                 kwargs['pde_system'] = pde_system
             fig_dir = kwargs.pop('fig_dir', None)
+            format = kwargs.pop('format', None)
             if fig_dir:
                 fig_dir = os.path.join(cfg.meta.base_path, fig_dir)
-            callbacks.append(MonitorCallback(MonitorClass(**kwargs), fig_dir=fig_dir, logger=logger))
+            callbacks.append(MonitorCallback(MonitorClass(**kwargs), fig_dir=fig_dir, format=format, logger=logger))
 
         return callbacks
