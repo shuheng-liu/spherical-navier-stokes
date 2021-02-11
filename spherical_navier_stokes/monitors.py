@@ -38,7 +38,7 @@ class ResidualMonitorSphericalHarmonics(MonitorSphericalHarmonics):
 
 class MonitorAxisymmetricSphericalVectorField(BaseMonitor):
     def __init__(self, r_min, r_max, theta_min, theta_max, harmonics_fn, check_every,
-                 density=3.0, net_r_index=0, net_theta_index=1):
+                 phi=0.0, density=1.5, net_r_index=0, net_theta_index=1):
         super(MonitorAxisymmetricSphericalVectorField, self).__init__()
         self.using_non_gui_backend = (matplotlib.get_backend() == 'agg')
         self.density = density
@@ -57,7 +57,7 @@ class MonitorAxisymmetricSphericalVectorField(BaseMonitor):
 
         r = torch.tensor(np.sqrt(x ** 2 + y ** 2))
         theta = torch.tensor(np.pi / 2 - np.arctan2(y, x))
-        phi = torch.zeros_like(theta)
+        phi = torch.zeros_like(theta) * phi
         self.mesh_shape = r.shape
         mask = torch.ones_like(r)
         mask[(r_min > r) | (r > r_max) | (theta_min > theta) | (theta > theta_max)] = torch.tensor(np.nan)
@@ -85,7 +85,7 @@ class MonitorAxisymmetricSphericalVectorField(BaseMonitor):
 
     def check(self, nets, conditions, history):
         if not self.fig:
-            self.fig = plt.figure(figsize=(6, 10))
+            self.fig = plt.figure(figsize=(7, 10), dpi=125)
             self.fig.tight_layout()
             self.ax = self.fig.add_subplot(1, 1, 1)
             self.ax.set_aspect(aspect='equal')
@@ -100,7 +100,7 @@ class MonitorAxisymmetricSphericalVectorField(BaseMonitor):
             utheta = (cond_theta.enforce(net_theta, self.r) * self.basis).sum(dim=1, keepdim=True)
             ux = (ur * torch.sin(utheta)).reshape(self.mesh_shape).cpu().numpy()
             uy = (ur * torch.cos(utheta)).reshape(self.mesh_shape).cpu().numpy()
-            color = ur.reshape(self.mesh_shape).cpu().numpy()
+            color = (torch.log10(ur ** 2 + utheta ** 2) / 2).reshape(self.mesh_shape).cpu().numpy()
 
         self.ax.clear()
         cax = self.ax.streamplot(
@@ -110,6 +110,8 @@ class MonitorAxisymmetricSphericalVectorField(BaseMonitor):
             cmap='magma',
         )
         self.ax.plot(self.x_boundary, self.y_boundary, linewidth=3.0, linestyle='--', color='m')
+        self.ax.spines['right'].set_visible(False)
+        self.ax.spines['top'].set_visible(False)
         if self.colorbar:
             self.colorbar.remove()
         self.colorbar = self.fig.colorbar(cax.lines, ax=self.ax)
