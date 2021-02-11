@@ -112,7 +112,7 @@ monitor:
     theta_min: 0.1
     theta_max: 3.041592653589793
     check_every: 100
-    density: 3.0
+    density: 1.5
     net_r_index: 0
     net_theta_index: 1
     fig_dir: figs/field
