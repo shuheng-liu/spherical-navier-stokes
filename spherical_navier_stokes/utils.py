@@ -3,6 +3,7 @@ import dill
 import datetime
 import functools
 import collections.abc
+from pytz import timezone
 from pathlib import Path
 
 
@@ -41,5 +42,5 @@ def load(path):
         return dill.load(f)
 
 
-def timestr():
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def timestr(zone=None):
+    return datetime.datetime.now(zone or timezone('Asia/Shanghai')).strftime("%Y-%m-%d %H:%M:%S")
