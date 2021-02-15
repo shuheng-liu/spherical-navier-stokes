@@ -12,7 +12,7 @@ from spherical_navier_stokes.monitors import MonitorCallbackFactory
 from spherical_navier_stokes.curriculum import CurriculumFactory
 from spherical_navier_stokes.conditions import ConditionFactory
 from spherical_navier_stokes.utils import dump, timestr
-from neurodiffeq.callbacks import ReportOnFitCallback, CheckpointCallback
+from neurodiffeq.callbacks import ReportOnFitCallback, CheckpointCallback, PeriodGlobal
 from pathlib import Path
 
 
@@ -38,8 +38,7 @@ class Session:
 
         if cfg.callback is None:
             self.callbacks = [
-                ReportOnFitCallback(logger=self.logger),
-                CheckpointCallback(ckpt_dir=Path(cfg.meta.base_path) / cfg.meta.output_path, logger=self.logger),
+                ReportOnFitCallback(logger=self.logger).conditioned_on(PeriodGlobal(period=500, logger=self.logger)),
             ]
 
         weighting_cfg = cfg.weighting

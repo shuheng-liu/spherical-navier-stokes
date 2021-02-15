@@ -6,7 +6,7 @@ import torch.nn as nn
 import numpy as np
 from pathlib import Path
 import shutil
-from neurodiffeq.callbacks import MonitorCallback
+from neurodiffeq.callbacks import ConditionMetaCallback
 from neurodiffeq.conditions import BaseCondition
 from neurodiffeq.solvers import BaseSolver
 from spherical_navier_stokes.session import Session
@@ -136,7 +136,7 @@ def test_optimizer(root_config, s):
 def test_monitors(root_config, s):
     assert isinstance(s.monitor_callbacks, list)
     for m in s.monitor_callbacks:
-        isinstance(m, MonitorCallback)
+        isinstance(m, ConditionMetaCallback)
 
 
 def test_curriculum(root_config, s):

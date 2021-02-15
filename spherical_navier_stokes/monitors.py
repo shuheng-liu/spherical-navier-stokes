@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from neurodiffeq.monitors import MonitorSphericalHarmonics, BaseMonitor
-from neurodiffeq.callbacks import MonitorCallback
+from neurodiffeq.callbacks import MonitorCallback, PeriodGlobal
 
 
 class ResidualMonitorSphericalHarmonics(MonitorSphericalHarmonics):
@@ -37,7 +37,7 @@ class ResidualMonitorSphericalHarmonics(MonitorSphericalHarmonics):
 
 
 class MonitorAxisymmetricSphericalVectorField(BaseMonitor):
-    def __init__(self, r_min, r_max, theta_min, theta_max, harmonics_fn, check_every,
+    def __init__(self, r_min, r_max, theta_min, theta_max, harmonics_fn, check_every=None,
                  phi=0.0, density=1.5, net_r_index=0, net_theta_index=1):
         super(MonitorAxisymmetricSphericalVectorField, self).__init__()
         self.using_non_gui_backend = (matplotlib.get_backend() == 'agg')
@@ -137,6 +137,7 @@ class MonitorCallbackFactory:
             if not k:
                 raise ValueError(f"Unknown Monitor type {c}")
             kwargs = {kw: arg for kw, arg in c.items()}
+            check_every = kwargs.pop('check_every')
             kwargs['harmonics_fn'] = harmonics_fn
             if MonitorClass == ResidualMonitorSphericalHarmonics:
                 kwargs['pde_system'] = pde_system
@@ -144,6 +145,25 @@ class MonitorCallbackFactory:
             format = kwargs.pop('format', None)
             if fig_dir:
                 fig_dir = os.path.join(cfg.meta.base_path, fig_dir)
-            callbacks.append(MonitorCallback(MonitorClass(**kwargs), fig_dir=fig_dir, format=format, logger=logger))
+            cb = MonitorCallback(MonitorClass(**kwargs), fig_dir=fig_dir, format=format, logger=logger)
+            callbacks.append(cb.conditioned_on(PeriodGlobal(period=check_every)))
 
         return callbacks
+
+
+if __name__ == '__main__':
+    from neurodiffeq.networks import FCNN
+    from neurodiffeq.conditions import NoCondition
+    from neurodiffeq.function_basis import ZonalSphericalHarmonics
+
+    n_nets = 4
+    degrees = [d * 2 for d in range(10)]
+    harmonics_fn = ZonalSphericalHarmonics(degrees=degrees)
+    monitor = MonitorAxisymmetricSphericalVectorField(
+        r_min=9.0, r_max=10.0, theta_min=0.1, theta_max=np.pi - 0.1, harmonics_fn=harmonics_fn,
+        check_every=100, phi=0.0, density=1.5, net_r_index=0, net_theta_index=1,
+    )
+    nets = [FCNN(1, len(degrees)) for _ in range(n_nets)]
+    conditions = [NoCondition() for _ in range(n_nets)]
+    monitor.check(nets=nets, conditions=conditions, history=None)
+    monitor.fig.show()
