@@ -133,7 +133,7 @@ callbacks:
         report
   - type: eve
     kwargs:
-      base_value: 1000.0
+      base_value: 10000.0
       double_at: 0.7
       use_train: true
       metric: loss
