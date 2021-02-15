@@ -12,6 +12,7 @@ from spherical_navier_stokes.monitors import MonitorCallbackFactory
 from spherical_navier_stokes.curriculum import CurriculumFactory
 from spherical_navier_stokes.conditions import ConditionFactory
 from spherical_navier_stokes.utils import dump, timestr
+from spherical_navier_stokes.callbacks import CallbackFactory
 from neurodiffeq.callbacks import ReportOnFitCallback, CheckpointCallback, PeriodGlobal, OnFirstGlobal
 from pathlib import Path
 
@@ -35,14 +36,7 @@ class Session:
             self.logger.addHandler(handler)
 
         self.logger.info('\n' + cfg.to_yml())
-
-        if cfg.callback is None:
-            self.callbacks = [
-                ReportOnFitCallback(logger=self.logger).conditioned_on(
-                    OnFirstGlobal(logger=self.logger) | PeriodGlobal(period=500, logger=self.logger)
-                ),
-            ]
-
+        self.callbacks = [CallbackFactory.from_config(c, logger=self.logger) for c in cfg.callbacks.items()]
         weighting_cfg = cfg.weighting
         if weighting_cfg is None:
             raise ValueError('weight_cfg = None')
