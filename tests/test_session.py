@@ -6,7 +6,7 @@ import torch.nn as nn
 import numpy as np
 from pathlib import Path
 import shutil
-from neurodiffeq.callbacks import ConditionMetaCallback
+from neurodiffeq.callbacks import ConditionMetaCallback, BaseCallback
 from neurodiffeq.conditions import BaseCondition
 from neurodiffeq.solvers import BaseSolver
 from spherical_navier_stokes.session import Session
@@ -146,6 +146,11 @@ def test_curriculum(root_config, s):
 def test_conditions(root_config, s):
     for c in s.conditions:
         assert isinstance(c, BaseCondition)
+
+
+def test_callbacks(root_config, s):
+    for cb in s.callbacks:
+        assert isinstance(cb, BaseCallback)
 
 
 def test_solver(modified_config, s2):
