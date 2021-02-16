@@ -122,19 +122,14 @@ monitor:
 
 # callbacks
 callbacks:
-  - type: or
-    args:
-      - type: on_first_local
-      - type: period_global
-        kwargs:
-          period: 50
+  - type: on_first_local
     action:
       type:
         report
   - type: eve
     kwargs:
       base_value: 10000.0
-      double_at: 0.7
+      double_at: 0.5
       use_train: true
       metric: loss
 
