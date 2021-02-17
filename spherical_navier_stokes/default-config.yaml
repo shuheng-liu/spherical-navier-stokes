@@ -122,7 +122,12 @@ monitor:
 
 # callbacks
 callbacks:
-  - type: on_first_local
+  - type: or
+    args:
+      - tpye: on_first_local
+      - type: period_global
+        kwargs:
+          period: 50
     action:
       type:
         report
