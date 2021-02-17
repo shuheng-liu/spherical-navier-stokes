@@ -124,7 +124,7 @@ monitor:
 callbacks:
   - type: or
     args:
-      - tpye: on_first_local
+      - type: on_first_local
       - type: period_global
         kwargs:
           period: 50
