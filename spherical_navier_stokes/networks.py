@@ -69,6 +69,21 @@ class Resnet(nn.Sequential):
         nn.Sequential.__init__(self, *layers)
 
 
+class Log(nn.Module):
+    def forward(self, x):
+        return torch.log(x)
+
+
+class Log10(nn.Module):
+    def forward(self, x):
+        return torch.log10(x)
+
+
+class Exp(nn.Module):
+    def forward(self, x):
+        return torch.exp(x)
+
+
 class ModelFactory:
     activations = dict(
         sin=SinActv,
@@ -91,6 +106,9 @@ class ModelFactory:
         linear=nn.Linear,
         softmax=nn.Softmax,
         sequential=nn.Sequential,
+        log=Log,
+        log10=Log10,
+        exp=Exp,
     )
     models.update(activations)
 
