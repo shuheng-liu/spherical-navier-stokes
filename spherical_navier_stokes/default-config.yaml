@@ -133,6 +133,7 @@ callbacks:
     kwargs:
       base_value: 1000.0
       double_at: 0.35
+      cap: 128
       use_train: true
       metric: loss
 
