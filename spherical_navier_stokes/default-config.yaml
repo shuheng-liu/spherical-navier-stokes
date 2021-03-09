@@ -37,14 +37,12 @@ network:
   ur: &default-net
     module_type: sequential
     args:
-      - module_type: monomialnn
-        kwargs:
-          degrees: [ 1, 2 ]
+      - module_type: log10
       - module_type: resnet
-        args: [ 2, 19 ]
+        args: [ 1, 19 ]
         kwargs:
-          n_res_blocks: 1
-          n_res_units: 2048
+          n_res_blocks: 6
+          n_res_units: 1024
           actv: Swish1
   utheta: *default-net
   uphi: *default-net
@@ -52,17 +50,17 @@ network:
 
 # curriculum
 curriculum:
-  r0_start: 0.1
+  r0_start: 9.0
   r1_start: 10.0
-  n_curricula: 10
-  epochs_per_curriculum: 4000
+  n_curricula: 50
+  epochs_per_curriculum: 10
   advance_method: log
   size_method: log
-  base_size: 2048
-  min_size: 512
-  max_size: 2048
+  base_size: &base_size 1024
+  min_size: *base_size
+  max_size: *base_size
   train:
-    n_batches: 4
+    n_batches: 1
     generator:
       type: spherical
       method: equally-radius-noisy
@@ -98,13 +96,13 @@ weighting:
 monitor:
   residual:
     <<: *default-monitor
-    check_every: 1000
+    check_every: 50
     var_names: [ '$\mathrm{Res}_r$', '$\mathrm{Res}_\theta$', '$\mathrm{Res}_\phi$', '$\nabla \cdot \mathbf{u}$' ]
     fig_dir: figs/residual
     format: jpg
   solution:
     <<: *default-monitor
-    check_every: 100
+    check_every: 50
     var_names: [ '$u_r$', '$u_\theta$', '$u_\phi$', '$p$' ]
     fig_dir: figs/solution
     format: jpg
@@ -113,7 +111,7 @@ monitor:
     r_max: *r1
     theta_min: 0.1
     theta_max: 3.041592653589793
-    check_every: 100
+    check_every: 50
     density: 1.5
     net_r_index: 0
     net_theta_index: 1
@@ -142,5 +140,5 @@ callbacks:
 optimizer:
   type: Adam
   kwargs:
-    lr: 0.005
-    betas: [ 0.9, 0.999 ]
+    lr: 0.001
+    weight_decay: 0.01
