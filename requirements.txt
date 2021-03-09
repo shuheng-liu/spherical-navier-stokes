@@ -1,2 +1,2 @@
-neurodiffeq @ git+https://github.com/odegym/neurodiffeq@master#egg=neurodiffeq
+neurodiffeq @ git+https://github.com/odegym/neurodiffeq@v0.3.2#egg=neurodiffeq
 PyYAML
