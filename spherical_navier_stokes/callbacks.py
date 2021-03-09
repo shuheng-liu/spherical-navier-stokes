@@ -1,5 +1,5 @@
 from spherical_navier_stokes.config import Config
-from neurodiffeq.callbacks import EveCallback, MonitorCallback, ReportOnFitCallback, CheckpointCallback
+from neurodiffeq.callbacks import EveCallback, MonitorCallback, ReportCallback, CheckpointCallback
 from neurodiffeq.callbacks import TrueCallback, FalseCallback, AndCallback, OrCallback, NotCallback, XorCallback
 from neurodiffeq.callbacks import OnFirstLocal, OnLastLocal, OnFirstGlobal, PeriodGlobal, PeriodLocal
 from neurodiffeq.callbacks import RepeatedMetricDiverge, RepeatedMetricConverge, RepeatedMetricUp, RepeatedMetricDown
@@ -30,7 +30,7 @@ class CallbackFactory:
     action_callbacks = {
         'eve': EveCallback,
         'monitor': MonitorCallback,
-        'report': ReportOnFitCallback,
+        'report': ReportCallback,
         'checkpoint': CheckpointCallback,
     }
 
